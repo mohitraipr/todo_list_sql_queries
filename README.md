@@ -1,5 +1,3 @@
-# todo_list_sql_queries
-
 # SQL Queries for Todo List Management
 
 This repository contains a set of SQL queries and scripts for managing a simple todo list using an Oracle Database. These SQL queries allow you to create and manipulate tables, insert data, retrieve data, and perform various operations on your todo list.
