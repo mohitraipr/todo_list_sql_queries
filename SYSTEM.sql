@@ -273,5 +273,135 @@ select task,
     from todo_list
     INNER JOIN list_content on todo_list.id = list_content.todo_list_id ORDER BY list_content.todo_list_id;
 
+--subqueries
+SELECT id FROM (SELECT * FROM todo_list);
+
+--subqueries(IN)
+SELECT task FROM todo_list 
+WHERE todo_list.id IN(
+SELECT todo_list_id FROM list_content
+);
+
+--subqueries(EXIST)
+SELECT task FROM todo_list 
+WHERE EXISTS(
+SELECT todo_list_id FROM list_content
+);
+
+--subqueries(ANY)
+SELECT task from todo_list
+WHERE todo_list.id > ANY (
+   SELECT todo_list_id
+   FROM list_content
+   WHERE list_id = 2
+);
+
+--subqueries(ALL)
+SELECT task from todo_list
+WHERE todo_list.id > ALL (
+   SELECT todo_list_id
+   FROM list_content
+   WHERE list_id = 2
+);
+
+--PROCEDURE
+CREATE OR REPLACE PROCEDURE InsertTask(task_name IN VARCHAR2) AS
+BEGIN
+    INSERT INTO todo_list(task) VALUES (task_name);
+    COMMIT;
+END InsertTask;
+
+EXEC InsertTask('Learn PL/SQL');
+
+--select * from todo_list;
+
+--updatetask
+CREATE OR REPLACE PROCEDURE UpdateTask(task_id IN NUMBER, new_task_name IN VARCHAR2) AS
+BEGIN
+    UPDATE todo_list SET task = new_task_name WHERE id = task_id;
+    COMMIT;
+END UpdateTask;
+/
+EXEC UpdateTask(7, 'Study SQL and PL/SQL');
+
+--deletetask
+CREATE OR REPLACE PROCEDURE DeleteTask(task_id IN NUMBER) AS
+BEGIN
+    DELETE FROM todo_list WHERE id = task_id;
+    COMMIT;
+END DeleteTask;
+/
+EXEC DeleteTask(8);
+
+--retrieving tasks
+CREATE OR REPLACE PROCEDURE GetAllTasks AS
+BEGIN
+    FOR task_rec IN (SELECT * FROM todo_list) LOOP
+        DBMS_OUTPUT.PUT_LINE('ID: ' || task_rec.id || ', Task: ' || task_rec.task);
+    END LOOP;
+END GetAllTasks;
+/
+exec GetAllTasks;
+
+--Counting Rows in todo_list
+CREATE OR REPLACE PROCEDURE GetTaskCount AS
+    task_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO task_count FROM todo_list;
+    DBMS_OUTPUT.PUT_LINE('Total Tasks: ' || task_count);
+END GetTaskCount;
+/
+EXEC GetTaskCount;
+
+--Counting Rows in todo_list
+CREATE OR REPLACE FUNCTION CountTasks RETURN NUMBER AS
+    task_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO task_count FROM todo_list;
+    RETURN task_count;
+END CountTasks;
+/
+SELECT CountTasks FROM DUAL;
+
+--Retrieving Task by ID
+CREATE OR REPLACE FUNCTION GetTaskById(task_id IN NUMBER) RETURN VARCHAR2 AS
+    task_name VARCHAR2(50);
+BEGIN
+    SELECT task INTO task_name FROM todo_list WHERE id = task_id;
+    RETURN task_name;
+END GetTaskById;
+/
+SELECT GetTaskById(3) FROM DUAL;
+
+--Checking Task Completion Status
+CREATE OR REPLACE FUNCTION IsTaskComplete(task_id IN NUMBER) RETURN NUMBER AS
+    task_status NUMBER;
+BEGIN
+    SELECT CASE WHEN status = 'Complete' THEN 1 ELSE 0 END INTO task_status FROM todo_list WHERE id = task_id;
+    RETURN task_status;
+END IsTaskComplete;
+
+/
+SELECT IsTaskComplete(4) FROM DUAL;
+
+--Getting Total Task Count
+CREATE OR REPLACE FUNCTION GetTotalTaskCount RETURN NUMBER AS
+    total_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO total_count FROM todo_list;
+    RETURN total_count;
+END GetTotalTaskCount;
+/
+SELECT GetTotalTaskCount FROM DUAL;
+
+--Concatenating Task Details
+CREATE OR REPLACE FUNCTION ConcatenateTaskDetails(task_id IN NUMBER) RETURN VARCHAR2 AS
+    task_details VARCHAR2(100);
+BEGIN
+    SELECT 'Task ID: ' || id || ', Task: ' || task || ', Status: ' || status INTO task_details FROM todo_list WHERE id = task_id;
+    RETURN task_details;
+END ConcatenateTaskDetails;
+/
+SELECT ConcatenateTaskDetails(5) FROM DUAL;
 
 commit;
