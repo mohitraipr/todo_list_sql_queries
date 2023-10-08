@@ -1,75 +1,77 @@
-# SQL Queries for Todo List Management
+# SQL Queries and Procedures README
+Here's a README that explains the purpose of the SQL queries, stored procedures, and functions :
 
-This repository contains a set of SQL queries and scripts for managing a simple todo list using an Oracle Database. These SQL queries allow you to create and manipulate tables, insert data, retrieve data, and perform various operations on your todo list.
+---
 
-## Getting Started
 
-To use these SQL queries, you'll need access to an Oracle Database. You can execute these queries using SQL*Plus, SQL Developer, or any other Oracle Database client.
+This document outlines a series of SQL queries, stored procedures, and functions used for managing a todo list and related tasks in an Oracle database.
 
-### Prerequisites
+## Queries and Actions
 
-- Access to an Oracle Database.
-- SQL client (e.g., SQL*Plus, SQL Developer).
+### 1. Sequence and Table Creation
 
-## Queries
+- `my_sequence` is created to auto-generate unique IDs.
+- `todo_list` table is created with an ID column using the sequence, and a task column to store task descriptions.
 
-### Creating Sequences and Tables
+### 2. Inserting and Retrieving Data
 
-- `CREATE SEQUENCE my_sequence`: Creates a sequence for generating unique IDs.
-- `CREATE TABLE todo_list`: Creates a table for storing todo list items.
+- Tasks are inserted into the `todo_list` table using both explicit IDs and auto-generated IDs from the sequence.
+- Data from the `todo_list` table is retrieved and displayed.
 
-### Inserting Data
+### 3. Data Manipulation and Cleanup
 
-- `INSERT INTO todo_list`: Inserts todo list items.
-  
-### Retrieving Data
+- Records with explicit IDs are deleted to resolve unique constraint errors.
+- Additional tasks are inserted into the `todo_list` table.
+- The table and sequence are dropped to remove them from the database.
+- The `todo_list` table is truncated to remove its data.
 
-- `SELECT`: Retrieves todo list items.
+### 4. Data Updates and Filtering
 
-### Deleting Data
+- Data in the `todo_list` table is updated.
+- Various SELECT queries are used to filter and retrieve specific data from the table based on task names.
 
-- `DELETE FROM todo_list`: Deletes todo list items.
+### 5. Sorting, Counting, and Aggregation
 
-### Updating Data
+- Data is sorted using the `ORDER BY` clause.
+- The number of rows in the `todo_list` table is counted.
+- Unique task descriptions are retrieved using `DISTINCT`.
+- Data is filtered using `WHERE` and `AND/OR` conditions.
+- Aggregate functions like `SUM`, `AVG`, `MAX`, and `MIN` are used.
 
-- `UPDATE todo_list`: Updates todo list items.
+### 6. Adding Date and Status Columns
 
-### Filtering and Sorting Data
+- Date columns (`day_start`, `day_end`) and a status column (`status`) are added to the `todo_list` table.
+- Sample data is updated to demonstrate the use of these columns.
 
-- `SELECT`: Filters and sorts todo list items.
+### 7. Creating a Related Table
 
-### Counting and Distinct
+- `list_content` table is created to store additional information related to tasks.
+- A foreign key relationship is established between `list_content` and `todo_list`.
 
-- `SELECT COUNT(*)`: Counts todo list items.
-- `SELECT DISTINCT`: Retrieves distinct todo list items.
+## Stored Procedures
 
-### Aggregate Functions
+Several stored procedures are created to perform common tasks on the `todo_list` table:
 
-- `SELECT SUM`, `AVG`, `MAX`, `MIN`: Performs aggregate functions on data.
+- `InsertTask`: Inserts a new task into the `todo_list` table.
+- `UpdateTask`: Updates the task description in the `todo_list` table.
+- `DeleteTask`: Deletes a task from the `todo_list` table.
+- `GetAllTasks`: Retrieves and displays all tasks from the `todo_list` table.
+- `GetTaskCount`: Counts and displays the total number of tasks in the `todo_list` table.
 
-### Adding Columns
+## Functions
 
-- `ALTER TABLE`: Adds columns to the todo list table.
+Several SQL functions are created to retrieve and process data from the `todo_list` table:
 
-### Creating Additional Tables
+- `CountTasks`: Returns the total number of tasks in the `todo_list` table.
+- `GetTaskById`: Returns the task description for a given task ID.
+- `IsTaskComplete`: Returns a numerical value (1 or 0) indicating whether a task is marked as 'Complete.'
+- `GetTotalTaskCount`: Returns the total number of tasks in the `todo_list` table.
+- `ConcatenateTaskDetails`: Returns a concatenated string with task details for a given task ID.
 
-- `CREATE TABLE list_content`: Creates a table for additional content related to todo list items.
+## Execution
 
-### Joining Tables
+Each query, stored procedure, and function is executed to demonstrate its functionality. Please review the individual sections above for detailed explanations and examples of execution.
 
-- `JOIN`, `LEFT JOIN`, `INNER JOIN`: Combines todo list and additional content.
+---
 
-## Usage
-
-1. Clone this repository.
-2. Connect to your Oracle Database.
-3. Execute the SQL queries using your SQL client.
-
-## Contributing
-
-Feel free to contribute to this project by opening issues or submitting pull requests. Your contributions are welcome!
-
-## Acknowledgments
-
-- Thanks to Oracle Database for providing a powerful database platform.
-
+This README provides an overview of the SQL queries, procedures, and functions you've created and demonstrates how they can be used to manage tasks in an Oracle database. You can refer to this document for reference and further development of your database management system.
